@@ -3,8 +3,9 @@ const router = express.Router();
 
 const siteController = require('../app/controllers/SiteController');
 
-router.use('/search', siteController.search);
-router.use('/', siteController.index);
-
+router.get('/search', siteController.search);
+router.get('/', siteController.index);
+router.get('/play', siteController.play);
+router.post('/play', siteController.store);
  
 module.exports = router
