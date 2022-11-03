@@ -12,7 +12,6 @@ class SiteController {
         // res.render('home');
     }
 
-
     //GET /search
     search(req, res) {
         res.render('search');
@@ -24,14 +23,11 @@ class SiteController {
     }
 
     //GET /play
-    store(req, res, next) {
-        console.log(req);
+    async store(req, res) {
         const formData = req.body
         const play = new Play(formData);
-        play.save();
-        const re = req;
-        res.json({message: `${re}`,
-    })
+        var result = await play.save();
+        res.send(result)
     }
 }
 module.exports = new SiteController;

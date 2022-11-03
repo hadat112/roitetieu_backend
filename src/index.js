@@ -5,6 +5,7 @@ const path = require('path');
 const app = express();
 const port = 3000;
 const cors = require('cors');
+var bodyParser = require('body-parser')
 const route = require('./routes');
 
 app.use(cors());
@@ -19,7 +20,7 @@ app.set('views', path.join(__dirname, 'resources/views'));
 const db = require('./config/db');
 
 db.connect();
-
+app.use(bodyParser.json())
 // method
 
 route(app);
