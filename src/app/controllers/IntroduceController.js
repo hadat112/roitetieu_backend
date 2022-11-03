@@ -1,13 +1,12 @@
-const Play = require('../models/Play');
 const Post = require('../models/Post');
 const { multiMongooseToObject } = require('../../util/mongoose.js');
-class SiteController {
+class IntroduceController {
     // [GET] /
     index(req, res, next) {
-        Play.find({})
-            .then((plays) => {
-                plays = multiMongooseToObject(plays);
-                res.json(plays);
+        Post.find({})
+            .then((posts) => {
+                posts = multiMongooseToObject(posts);
+                res.json(posts);
             })
             .catch(next)
         // res.render('home');
@@ -23,13 +22,6 @@ class SiteController {
         res.render(req);
     }
 
-    show(req, res, next) {
-        Post.findOne({slug: req.params.slug})
-        .then((post) => {
-            res.json(post);
-        })
-        .catch(next)    }
-
     //GET /play
     async store(req, res) {
         const formData = req.body
@@ -38,4 +30,4 @@ class SiteController {
         res.send(result)
     }
 }
-module.exports = new SiteController;
+module.exports = new IntroduceController;
