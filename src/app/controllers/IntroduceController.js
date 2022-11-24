@@ -4,7 +4,7 @@ const { multiMongooseToObject } = require("../../util/mongoose.js");
 class IntroduceController {
   // [GET] /
   index(req, res, next) {
-    Post.find({})
+    Post.find({ type: req.params.type })
       .then((posts) => {
         posts = multiMongooseToObject(posts);
         res.json(posts);
