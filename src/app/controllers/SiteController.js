@@ -1,5 +1,7 @@
 const Play = require("../models/Play");
 const Post = require("../models/Post");
+const fs = require("fs");
+const path = require("path");
 const { multiMongooseToObject } = require("../../util/mongoose.js");
 class SiteController {
   // [GET] /
@@ -10,17 +12,25 @@ class SiteController {
         res.json(plays);
       })
       .catch(next);
-    // res.render('home');
+
+    res.send("post");
+
+    res.render("home");
   }
 
-  //GET /search
   search(req, res) {
     res.render("search");
   }
 
-  //GET /search
   play(req, res) {
     res.render(req);
+  }
+
+  model(req, res) {
+    const stream = fs.createReadStream(
+      path.join(__dirname, "..", "..", "images", `${req.params.id}-model.glb`)
+    );
+    stream.pipe(res);
   }
 
   show(req, res, next) {
@@ -31,7 +41,6 @@ class SiteController {
       .catch(next);
   }
 
-  //GET /play
   async store(req, res) {
     const formData = req.body;
     const play = new Play(formData);
