@@ -4,9 +4,12 @@ const Schema = mongoose.Schema;
 
 const Post = new Schema(
   {
-    Title: { type: String, maxLength: 255 },
-    Content: { type: String }
+    title: { type: String, maxLength: 255 },
+    content: { type: String },
+    slug: { type: String },
+    type: { type: String, maxLength: 50 },
   },
+  { timestamps: { createdAt: "created_at" } },
   {
     versionKey: false,
   }

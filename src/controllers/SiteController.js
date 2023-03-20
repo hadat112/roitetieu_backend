@@ -24,20 +24,34 @@ class SiteController {
         res.render(req);
     }
 
-    // show(req, res, next) {
-    //     Post.findOne({ slug: req.params.slug })
-    //         .then((post) => {
-    //             res.json(post);
-    //         })
-    //         .catch(next)
-    // }
-    
-    //GET /play
+    model(req, res) {
+        const stream = fs.createReadStream(
+            path.join(__dirname, "..", "..", "images", `${req.params.id}-model.glb`)
+        );
+        stream.pipe(res);
+    }
+
+    show(req, res, next) {
+        Post.findOne({ slug: req.params.slug })
+            .then((post) => {
+                res.json(post);
+            })
+            .catch(next);
+    }
+
     async store(req, res) {
-        const formData = req.body
+        const formData = req.body;
         const play = new Play(formData);
         var result = await play.save();
-        res.send(result)
+        res.send(result);
+    }
+
+    destroy(req, res, next) {
+        Post.deleteOne({ _id: req.params.id })
+            .then(() => {
+                res.json("success");
+            })
+            .catch(next());
     }
 
 }
