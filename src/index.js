@@ -1,12 +1,14 @@
-const express = require('express');
-const { engine } = require('express-handlebars')
-const morgan = require('morgan');
-const path = require('path');
+import express from 'express';
+import { engine } from 'express-handlebars';
+import morgan from 'morgan';
+import path from 'path';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import route from './routes';
+import connect from './config/db';
+
 const app = express();
-const port = 3000;
-const cors = require('cors');
-var bodyParser = require('body-parser')
-const route = require('./routes');
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 
@@ -17,17 +19,14 @@ app.use(morgan('combined'));
 app.engine('hbs', engine({ extname: '.hbs' }));
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'resources/views'));
-const db = require('./config/db');
 
-db.connect();
+connect();
+
 app.use(bodyParser.json())
 // method
 
 route(app);
 
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}`)
 })
-
-

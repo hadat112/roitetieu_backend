@@ -4,4 +4,6 @@ class NewController {
     }
 }
 
-module.exports = new  NewController;
+const newController = new NewController();
+
+export default newController;

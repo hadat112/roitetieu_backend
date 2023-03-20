@@ -1,11 +1,13 @@
-const Post = require('../models/Post');
-const { multiMongooseToObject } = require('../../util/mongoose.js');
+import Post from '../models/Post';
+import { multiMongooseToObject } from '../util/mongoose.js';
+
 class IntroduceController {
     // [GET] /
     index(req, res, next) {
         Post.find({})
             .then((posts) => {
                 posts = multiMongooseToObject(posts);
+                console.log(run);
                 res.json(posts);
             })
             .catch(next)
@@ -22,7 +24,7 @@ class IntroduceController {
         res.render(req);
     }
 
-    //GET /play
+    //GET /store
     async store(req, res) {
         const formData = req.body
         const play = new Play(formData);
@@ -30,4 +32,5 @@ class IntroduceController {
         res.send(result)
     }
 }
-module.exports = new IntroduceController;
+const introduceController = new IntroduceController();
+export default introduceController;

@@ -1,12 +1,13 @@
-const express = require('express');
-const router = express.Router();
+import { Router } from 'express';
+import siteController from '../controllers/SiteController';
+import verifyToken from '../middleware/auth';
 
-const siteController = require('../app/controllers/SiteController');
+const router = Router();
 
 router.get('/search', siteController.search);
-router.get('/', siteController.index);
-router.get('/:slug', siteController.show);
+// router.get('/:slug', siteController.show);
 router.get('/play', siteController.play);
 router.post('/play', siteController.store);
+router.get('/', verifyToken, siteController.index);
  
-module.exports = router
+export default router;

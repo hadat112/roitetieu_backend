@@ -1,6 +1,7 @@
-const Play = require('../models/Play');
-const Post = require('../models/Post');
-const { multiMongooseToObject } = require('../../util/mongoose.js');
+import Play from '../models/Play';
+import Post from '../models/Post';
+import { multiMongooseToObject } from '../util/mongoose';
+
 class SiteController {
     // [GET] /
     index(req, res, next) {
@@ -23,13 +24,14 @@ class SiteController {
         res.render(req);
     }
 
-    show(req, res, next) {
-        Post.findOne({slug: req.params.slug})
-        .then((post) => {
-            res.json(post);
-        })
-        .catch(next)    }
-
+    // show(req, res, next) {
+    //     Post.findOne({ slug: req.params.slug })
+    //         .then((post) => {
+    //             res.json(post);
+    //         })
+    //         .catch(next)
+    // }
+    
     //GET /play
     async store(req, res) {
         const formData = req.body
@@ -37,5 +39,8 @@ class SiteController {
         var result = await play.save();
         res.send(result)
     }
+
 }
-module.exports = new SiteController;
+const siteController = new SiteController();
+
+export default siteController;
