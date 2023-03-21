@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import connect from './config/db';
 import jwt from 'jsonwebtoken';
 const app = express();
-const PORT = 4000;
+const PORT = 5000;
 
 app.use(cors());
 
@@ -19,7 +19,6 @@ app.use(bodyParser.json());
 
 const updateRefreshToken = async (username, refreshToken) => {
     const res = await User.findOneAndUpdate({ user_name: username }, { $set: { refresh_token: refreshToken } })
-    console.log(res);
 }
 
 app.post('/login', async (req, res) => {

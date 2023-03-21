@@ -32,11 +32,15 @@ class SiteController {
     }
 
     show(req, res, next) {
-        Post.findOne({ slug: req.params.slug })
+        console.log(req.query);
+        Post.findOne({ slug: req.query.slug })
             .then((post) => {
-                res.json(post);
+                res.send({ data: post, success: true });
             })
-            .catch(next);
+            .catch(() => {
+                res.send({ message: 'Da co loi', success: false });
+                next();
+            });
     }
 
     async store(req, res) {
@@ -45,15 +49,6 @@ class SiteController {
         var result = await play.save();
         res.send(result);
     }
-
-    destroy(req, res, next) {
-        Post.deleteOne({ _id: req.params.id })
-            .then(() => {
-                res.json("success");
-            })
-            .catch(next());
-    }
-
 }
 const siteController = new SiteController();
 

@@ -7,7 +7,7 @@ class IntroduceController {
     Post.find({})
       .then((posts) => {
         posts = multiMongooseToObject(posts);
-        console.log(run);
+        console.log('run');
         res.json(posts);
       })
       .catch(next)
@@ -19,12 +19,25 @@ class IntroduceController {
     res.render('search');
   }
 
-  //GET /store
-  async store(req, res) {
+  async savePost(req, res) {
     const formData = req.body;
     const post = new Post(formData);
     var result = await post.save();
-    res.send(result);
+    if(!result) {
+      res.send({success: false, message: 'Khong the luu'});
+    }
+    res.send({data: post, success: true});
+  }
+
+  deletePost(req, res) {
+    const result = Post.deleteOne({ _id: req.params.id })
+      .then(() => {
+        res.send({ success: true });
+      })
+      .catch(()=>{
+        res.send({ success: false, message: 'Khong the luu' });
+        next();
+      });
   }
 }
 
