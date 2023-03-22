@@ -1,4 +1,5 @@
 import Post from '../models/Post';
+import Comment from '../models/Comment';
 import { multiMongooseToObject } from '../util/mongoose.js';
 
 class IntroduceController {
@@ -7,7 +8,6 @@ class IntroduceController {
     Post.find({})
       .then((posts) => {
         posts = multiMongooseToObject(posts);
-        console.log('run');
         res.json(posts);
       })
       .catch(next)
@@ -27,6 +27,16 @@ class IntroduceController {
       res.send({success: false, message: 'Khong the luu'});
     }
     res.send({data: post, success: true});
+  }
+
+  async saveComment(req, res) {
+    const formData = req.body;
+    const comment = new Comment({...formData, username: req.username});
+    var result = await comment.save();
+    if (!result) {
+      res.send({ success: false, message: 'Khong the luu' });
+    }
+    res.send({ data: comment, success: true });
   }
 
   deletePost(req, res) {
