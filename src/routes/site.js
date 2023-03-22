@@ -6,9 +6,6 @@ const router = Router();
 
 router.get("/model/:id", siteController.model);
 router.get("/post-detail", siteController.show);
-router.get('/search', siteController.search);
-router.get('/play', siteController.play);
-router.post('/play', siteController.store);
 router.get('/post', verifyToken, siteController.index);
-
+router.get('/user-info', verifyToken, siteController.getUserInfo);
 export default router;

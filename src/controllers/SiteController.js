@@ -11,17 +11,6 @@ class SiteController {
                 res.json(plays);
             })
             .catch(next)
-        // res.render('home');
-    }
-
-    //GET /search
-    search(req, res) {
-        res.render('search');
-    }
-
-    //GET /search
-    play(req, res) {
-        res.render(req);
     }
 
     model(req, res) {
@@ -48,6 +37,11 @@ class SiteController {
         const play = new Play(formData);
         var result = await play.save();
         res.send(result);
+    }
+
+
+    async getUserInfo(req, res) {
+
     }
 }
 const siteController = new SiteController();

@@ -7,9 +7,8 @@ const verifyToken =  (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, 'secret');
-        console.log(decoded);
         next();
-    } 
+    }
     catch(err) {
         console.log(err);
         res.sendStatus(403);

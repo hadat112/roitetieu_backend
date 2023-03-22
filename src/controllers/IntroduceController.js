@@ -14,11 +14,6 @@ class IntroduceController {
     // res.render('home');
   }
 
-  //GET /search
-  search(req, res) {
-    res.render('search');
-  }
-
   async savePost(req, res) {
     const formData = req.body;
     const post = new Post(formData);
