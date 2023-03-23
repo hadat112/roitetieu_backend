@@ -31,6 +31,7 @@ class IntroduceController {
 
   async saveComment(req, res) {
     const formData = req.body;
+    console.log(req.username);
     const comment = new Comment({...formData, username: req.username});
     var result = await comment.save();
     if (!result) {
