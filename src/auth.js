@@ -1,26 +1,28 @@
-import express from 'express';
-import cors from 'cors';
-import bodyParser from 'body-parser';
-import connect from './config/db';
-import jwt from 'jsonwebtoken';
+import express from "express";
+import cors from "cors";
+import bodyParser from "body-parser";
+import connect from "./config/db";
+import jwt from "jsonwebtoken";
 const app = express();
-const PORT = 3001;
-import bcrypt from 'bcrypt';
+
+const PORT = process.env.AUTH_PORT || 3001;
+require("dotenv").config();
+import bcrypt from "bcrypt";
 
 app.use(cors());
 
-// HTTP logger
-
 connect();
 
-import User from './models/User';
-
+import User from "./models/User";
 
 app.use(bodyParser.json());
 
-const updateRefreshToken = async (username, refreshToken) => {
-    const res = await User.findOneAndUpdate({ user_name: username }, { $set: { refresh_token: refreshToken } })
-}
+const updateRefreshToken = async (username, password, refreshToken) => {
+    const res = await User.findOneAndUpdate(
+        { user_name: username, password },
+        { $set: { refresh_token: refreshToken } }
+    );
+};
 
 app.post('/register', async (req, res) => {
     const user_name = req.body.username;
@@ -46,7 +48,13 @@ app.post('/register', async (req, res) => {
             }
         });
     }
-})
+    return res.status(200).send({
+        data: username,
+        message: "Tao tk thanh cong",
+        success: true,
+    });
+}
+);
 
 app.post('/login', async (req, res) => {
     const user_name = req.body.username;
@@ -59,7 +67,7 @@ app.post('/login', async (req, res) => {
     const accessToken = jwt.sign({ user_name }, 'secret', { expiresIn: '1500s' })
     const refreshToken = jwt.sign({ user_name }, 'refreshsecret', { expiresIn: '1h' })
     updateRefreshToken(user_name, refreshToken);
-    res.json({ "success": true, data:{"token": accessToken, "refreshToken": refreshToken} });
+    res.json({ "success": true, data: { "token": accessToken, "refreshToken": refreshToken } });
 });
 
 app.post('/refresh-token', async (req, res) => {
@@ -74,14 +82,13 @@ app.post('/refresh-token', async (req, res) => {
         const newRefreshToken = jwt.sign({ user_name }, 'refreshsecret', { expiresIn: '1h' })
         updateRefreshToken(user_name, newRefreshToken)
 
-        res.json({ "success": "true", data:{ "token": accessToken, "refreshToken": refreshToken} })
+        res.json({ "success": "true", data: { "token": accessToken, "refreshToken": refreshToken } })
     } catch (error) {
         console.log(error)
         res.sendStatus(403)
     }
 })
 
-
 app.listen(PORT, () => {
-    console.log(`Example app listening on port ${PORT}`)
-})
+    console.log(`Example app listening on port ${PORT}`);
+});
