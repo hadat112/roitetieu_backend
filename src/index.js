@@ -8,6 +8,7 @@ import route from './routes';
 import connect from './config/db';
 require('dotenv').config();
 
+import createError from 'http-errors'
 
 const app = express();
 const PORT = process.env.PUPPET_PORT || 4000;
@@ -28,6 +29,15 @@ app.use(bodyParser.json())
 // method
 
 route(app);
+
+app.use((req, res, next) => {
+  next(createError(404));
+});
+
+app.use((err, req, res) => {
+  console.log(err.stack);
+  res.status(err.status || 500).send(err.message);
+});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)

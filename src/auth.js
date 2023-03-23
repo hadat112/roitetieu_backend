@@ -5,12 +5,11 @@ import connect from "./config/db";
 import jwt from "jsonwebtoken";
 const app = express();
 
-const PORT = process.env.AUTH_PORT || 5000;
+const PORT = process.env.AUTH_PORT || 3001;
 require("dotenv").config();
+import bcrypt from "bcrypt";
 
 app.use(cors());
-
-// HTTP logger
 
 connect();
 
@@ -25,48 +24,76 @@ const updateRefreshToken = async (username, password, refreshToken) => {
   );
 };
 
-app.post("/login", async (req, res) => {
-  const user_name = req.body.user_name;
-  const password = req.body.password;
-  const hasUser = await User.find({ user_name: user_name, password });
-  if (!hasUser) {
-    return res.json({
-      success: "false",
-      message: "Sai username  va password",
-      status: 401,
+app.post("/register", async (req, res) => {
+  const username = req.body.username;
+  const user = await User.findOne({ username });
+  if (user)
+    res
+      .status(200)
+      .send({ message: "Tên tài khoản đã tồn tại.", success: false });
+  else {
+    const hashPassword = bcrypt.hashSync(req.body.password, 10);
+    const newUser = {
+      user_name: username,
+      password: hashPassword,
+    };
+    const createUser = await User.create(newUser);
+    if (!createUser) {
+      return res
+        .status(400)
+        .send({
+          message: "Có lỗi trong quá trình tạo tài khoản, vui lòng thử lại.",
+        });
+    }
+    return res.status(200).send({
+      data: username,
+      message: "Tao tk thanh cong",
+      success: true,
     });
   }
-  const accessToken = jwt.sign({ user_name, password }, "secret", {
-    expiresIn: "15s",
-  });
-  const refreshToken = jwt.sign({ user_name, password }, "refreshsecret", {
+});
+
+app.post("/login", async (req, res) => {
+  const user_name = req.body.username;
+  const password = req.body.password;
+  const user = await User.findOne({ user_name: user_name });
+  if (!user) {
+    return res.json({
+      success: "false",
+      message: "Tên đăng nhập không tồn tại.",
+    });
+  }
+  const isPasswordValid = bcrypt.compareSync(password, user.password);
+  if (!isPasswordValid) {
+    return res.json({ success: "false", message: "Mật khẩu không chính xác." });
+  }
+
+  const accessToken = jwt.sign({ user_name }, "secret", { expiresIn: "1500s" });
+  const refreshToken = jwt.sign({ user_name }, "refreshsecret", {
     expiresIn: "1h",
   });
-  updateRefreshToken(user_name, password, refreshToken);
-  res.json({
-    success: "true",
-    data: { token: accessToken, refreshToken: refreshToken },
-  });
+  updateRefreshToken(user_name, refreshToken);
+  res.json({ success: "true", token: accessToken, refreshToken: refreshToken });
 });
 
 app.post("/refresh-token", async (req, res) => {
   const refreshToken = req.body.refresh_token;
-  if (!refreshToken) return res.sendStatus(401);
-  const user = await User.find({ refresh_token: refreshToken });
-  console.log(user, "user");
+  if (!refreshToken)
+    return res
+      .sendStatus(401)
+      .send({ success: false, message: "Refresh token sai!" });
+  const user = await User.findOne({ refresh_token: refreshToken });
   if (!user) return res.sendStatus(403);
-  const { user_name, user_id, password } = user;
+  const { user_name } = user;
   try {
     jwt.verify(refreshToken, "refreshsecret");
-    const accessToken = jwt.sign({ user_name, user_id, password }, "secret", {
-      expiresIn: "15s",
+    const accessToken = jwt.sign({ user_name }, "secret", {
+      expiresIn: "1500s",
     });
-    const newRefreshToken = jwt.sign(
-      { user_name, user_id, password },
-      "refreshsecret",
-      { expiresIn: "1h" }
-    );
-    updateRefreshToken(user_name, password, newRefreshToken);
+    const newRefreshToken = jwt.sign({ user_name }, "refreshsecret", {
+      expiresIn: "1h",
+    });
+    updateRefreshToken(user_name, newRefreshToken);
 
     res.json({
       success: "true",

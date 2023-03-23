@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import introduceController from '../controllers/IntroduceController';
+import verifyToken from '../middleware/auth';
 
 const router = Router();
 
-router.get('/posts', introduceController.index);
-router.post('/posts', introduceController.savePost);
-router.delete("/posts", introduceController.deletePost);
+router.get('/posts', verifyToken, introduceController.index);
+router.post('/posts', verifyToken, introduceController.savePost);
+router.delete("/posts", verifyToken, introduceController.deletePost);
+router.post('/comment', verifyToken, introduceController.saveComment);
 
 export default router;

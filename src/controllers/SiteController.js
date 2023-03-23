@@ -1,5 +1,6 @@
 import Play from '../models/Play';
 import Post from '../models/Post';
+import Comment from '../models/Comment';
 import { multiMongooseToObject } from '../util/mongoose';
 
 class SiteController {
@@ -20,16 +21,13 @@ class SiteController {
         stream.pipe(res);
     }
 
-    show(req, res, next) {
-        console.log(req.query);
-        Post.findOne({ slug: req.query.slug })
-            .then((post) => {
-                res.send({ data: post, success: true });
-            })
-            .catch(() => {
-                res.send({ message: 'Da co loi', success: false });
-                next();
-            });
+   async show(req, res, next) {
+       console.log('post');
+        const post = await Post.findOne({ slug: req.query.slug })
+        if(!post)
+            res.send({ message: 'Da co loi', success: false });
+        const comments = await Comment.find({post_id: post._id});
+        res.send({ data: {post, comments}, success: true });
     }
 
     async store(req, res) {
