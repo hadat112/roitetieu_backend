@@ -11,7 +11,7 @@ require('dotenv').config();
 import createError from 'http-errors'
 
 const app = express();
-const PORT = process.env.PUPPET_PORT || 4000;
+const PORT = process.env.PUPPET_PORT || 4001;
 
 app.use(cors());
 

@@ -8,6 +8,7 @@ const Post = new Schema(
     content: { type: String },
     slug: { type: String },
     type: { type: String, maxLength: 50 },
+    count: { type: Number, default: 0 }
   },
   { timestamps: { createdAt: "created_at" } },
   {

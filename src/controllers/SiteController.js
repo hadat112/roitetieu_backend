@@ -22,12 +22,16 @@ class SiteController {
     }
 
    async show(req, res, next) {
-       console.log('post');
-        const post = await Post.findOne({ slug: req.query.slug })
-        if(!post)
+       const post = await Post.findOneAndUpdate({ slug: req.query.slug }, { $inc: { 'count': 1 } });
+        if(!post) {
             res.send({ message: 'Da co loi', success: false });
-        const comments = await Comment.find({post_id: post._id});
-        res.send({ data: {post, comments}, success: true });
+            next();
+            return;
+        }
+        if(post._id) {
+            const comments = await Comment.find({post_id: post._id});
+            res.send({ data: {post, comments}, success: true });
+        }
     }
 
     async store(req, res) {

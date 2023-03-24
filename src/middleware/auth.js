@@ -8,13 +8,12 @@ const verifyToken =  (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, 'secret');
-        console.log(decoded);
         req.username = decoded.user_name;
         next();
     }
     catch(err) {
         console.log(err);
-        res.sendStatus(403);
+        res.sendStatus(401);
     }
 }
 

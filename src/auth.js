@@ -33,7 +33,7 @@ app.post('/register', async (req, res) => {
         const hashPassword = bcrypt.hashSync(req.body.password, 10);
         const hashPasswordConfirmation = bcrypt.hashSync(req.body.confirm, 10);
         const accessToken = jwt.sign({ user_name }, 'secret', { expiresIn: '1500s' })
-        const refreshToken = jwt.sign({ user_name }, 'refreshsecret', { expiresIn: '1h' })
+        const refreshToken = jwt.sign({ user_name }, 'refreshsecret', { expiresIn: '30d' })
         const newUser = new User({
             user_name: user_name,
             password: hashPassword,
@@ -65,7 +65,7 @@ app.post('/login', async (req, res) => {
     if (!isPasswordValid) { return res.json({ "success": false, "message": "Mật khẩu không chính xác." }) }
 
     const accessToken = jwt.sign({ user_name }, 'secret', { expiresIn: '1500s' })
-    const refreshToken = jwt.sign({ user_name }, 'refreshsecret', { expiresIn: '1h' })
+    const refreshToken = jwt.sign({ user_name }, 'refreshsecret', { expiresIn: '30d' })
     updateRefreshToken(user_name, refreshToken);
     res.json({ "success": true, data: { "token": accessToken, "refreshToken": refreshToken } });
 });
@@ -79,10 +79,10 @@ app.post('/refresh-token', async (req, res) => {
     try {
         jwt.verify(refreshToken, 'refreshsecret')
         const accessToken = jwt.sign({ user_name }, 'secret', { expiresIn: '1500s' })
-        const newRefreshToken = jwt.sign({ user_name }, 'refreshsecret', { expiresIn: '1h' })
+        const newRefreshToken = jwt.sign({ user_name }, 'refreshsecret', { expiresIn: '30d' })
         updateRefreshToken(user_name, newRefreshToken)
 
-        res.json({ "success": "true", data: { "token": accessToken, "refreshToken": refreshToken } })
+        res.json({ "success": true, data: { "token": accessToken, "refreshToken": refreshToken } })
     } catch (error) {
         console.log(error)
         res.sendStatus(403)
