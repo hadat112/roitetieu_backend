@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "auth": "nodemon -w src/auth.js --exec \"babel-node src/auth.js --presets es2015,stage-0\"",
+    "image": "nodemon -w src/image.js --exec \"babel-node src/image.js --presets es2015,stage-0\"",
     "dev": "nodemon -w src --exec \"babel-node src --presets es2015,stage-0\"",
     "build": "babel src -s -D -d dist --presets es2015,stage-0",
     "start": "node dist",
