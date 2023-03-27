@@ -2,7 +2,7 @@ import Post from '../models/Post';
 import Comment from '../models/Comment';
 import { multiMongooseToObject } from '../util/mongoose.js';
 import unorm from 'unorm';
-
+import { getTopRecommendations } from '../util/recommend';
 class IntroduceController {
   // [GET] /
   async index(req, res, next) {
@@ -25,8 +25,18 @@ class IntroduceController {
       }).catch((err) => {
         console.log(err);
       });
-      console.log(posts);
-
+    } else if (req.query.type === 'recommend') {
+      Post.find({})
+        .then((posts) => {
+          posts = multiMongooseToObject(posts);
+          let curentIndex;
+          posts.map((post, index) => { 
+            if (post._id.toString() === req.query.id) curentIndex=  index })
+          const recommendations = getTopRecommendations(curentIndex, posts, 5);
+          console.log(recommendations);
+          // res.send({ "data": recommendations, "success": true, "status": 200 });
+        })
+        .catch(next)
     }
     // res.status(200).send({ success: false, message: 'Có lỗi trong quá trình xử lí dữ liệu' });
   }

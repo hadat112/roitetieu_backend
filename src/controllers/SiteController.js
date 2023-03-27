@@ -4,16 +4,6 @@ import Comment from '../models/Comment';
 import { multiMongooseToObject } from '../util/mongoose';
 
 class SiteController {
-    // [GET] /
-    index(req, res, next) {
-        Play.find({})
-            .then((plays) => {
-                plays = multiMongooseToObject(plays);
-                res.json(plays);
-            })
-            .catch(next)
-    }
-
     model(req, res) {
         const stream = fs.createReadStream(
             path.join(__dirname, "..", "..", "images", `${req.params.id}-model.glb`)
@@ -40,7 +30,6 @@ class SiteController {
         var result = await play.save();
         res.send(result);
     }
-
 
     async getUserInfo(req, res) {
 

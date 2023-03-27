@@ -65,7 +65,7 @@ app.post('/login', async (req, res) => {
     if (!isPasswordValid) { return res.json({ "success": false, "message": "Mật khẩu không chính xác." }) }
 
     const accessToken = jwt.sign({ user_name }, 'secret', { expiresIn: '1500s' })
-    const refreshToken = jwt.sign({ user_name }, 'refreshsecret', { expiresIn: '30d' })
+    const refreshToken = jwt.sign({ user_name }, 'refreshsecret', { expiresIn: '86400' })
     updateRefreshToken(user_name, refreshToken);
     res.json({ "success": true, data: { "token": accessToken, "refreshToken": refreshToken } });
 });
@@ -79,7 +79,7 @@ app.post('/refresh-token', async (req, res) => {
     try {
         jwt.verify(refreshToken, 'refreshsecret')
         const accessToken = jwt.sign({ user_name }, 'secret', { expiresIn: '1500s' })
-        const newRefreshToken = jwt.sign({ user_name }, 'refreshsecret', { expiresIn: '30d' })
+        const newRefreshToken = jwt.sign({ user_name }, 'refreshsecret', { expiresIn: '86400' })
         updateRefreshToken(user_name, newRefreshToken)
 
         res.json({ "success": true, data: { "token": accessToken, "refreshToken": refreshToken } })

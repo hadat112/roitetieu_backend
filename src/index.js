@@ -1,5 +1,4 @@
 import express from 'express';
-import { engine } from 'express-handlebars';
 import morgan from 'morgan';
 import path from 'path';
 import cors from 'cors';
@@ -18,10 +17,6 @@ app.use(cors());
 // HTTP logger
 app.use(morgan('combined'));
 
-// Template engine
-app.engine('hbs', engine({ extname: '.hbs' }));
-app.set('view engine', 'hbs');
-app.set('views', path.join(__dirname, 'resources/views'));
 
 connect();
 
