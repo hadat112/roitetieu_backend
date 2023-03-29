@@ -84,11 +84,7 @@ class IntroduceController {
     if (posts) {
       res.status(200).send({
         success: true,
-        data: posts.map(post => ({
-          value: post._id,
-          label: post.title,
-          slug: post.slug,
-        }))
+        data: posts
       });
     }
   }

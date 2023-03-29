@@ -23,7 +23,6 @@ class PlayController {
             image: path,
         });
         
-        console.log({ play });
         var result = await play.save();
         // if (true) {
         //   res.send({ success: false, message: "Khong the luu" });
