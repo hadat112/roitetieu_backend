@@ -5,6 +5,8 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import route from "./routes";
 import connect from "./config/db";
+import moment from "moment";
+
 require("dotenv").config();
 const http = require("http");
 const socketio = require("socket.io");
@@ -19,11 +21,11 @@ const {
   updatePlayerAnswer,
   getGameByID,
   gameLoop,
-} = require("./controllers/users");
+} = require("./controllers/game");
 
 const app = express();
 const server = http.createServer(app);
-const PORT = 5001;
+const PORT = process.env.PUPPET_PORT || 4001;
 
 app.use(cors());
 route(app);
@@ -41,7 +43,6 @@ const io = socketio(server, {
   origins: ["http://localhost:5173"],
 });
 
-console.log(io);
 
 // Socker Emitters
 const updateLeaderboard = (data, room) => {

@@ -18,7 +18,7 @@ import User from "./models/User";
 app.use(bodyParser.json());
 
 const updateRefreshToken = async (username, password, refreshToken) => {
-  User.findOneAndUpdate(
+  await User.findOneAndUpdate(
     { user_name: username, password },
     { $set: { refresh_token: refreshToken } }
   );
@@ -26,7 +26,7 @@ const updateRefreshToken = async (username, password, refreshToken) => {
 
 app.post("/register", async (req, res) => {
   const user_name = req.body.username;
-  const user = User.findOne({ user_name: user_name });
+  const user = await User.findOne({ user_name: user_name });
   if (user)
     res
       .status(200)
@@ -74,7 +74,7 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
   const user_name = req.body.username;
   const password = req.body.password;
-  const user = User.findOne({ user_name: user_name });
+  const user = await User.findOne({ user_name: user_name });
   if (!user) {
     return res.json({
       success: false,
@@ -103,7 +103,7 @@ app.post("/refresh-token", async (req, res) => {
     return res
       .sendStatus(400)
       .send({ success: false, message: "Refresh token sai!" });
-  const user = User.findOne({ refresh_token: refreshToken });
+  const user = await User.findOne({ refresh_token: refreshToken });
   if (!user) return res.sendStatus(403);
   const { user_name } = user;
   try {

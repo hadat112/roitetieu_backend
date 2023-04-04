@@ -1,8 +1,8 @@
 const games = {};
-const moment = require("moment");
+import moment from 'moment';
+import fetch from "node-fetch";
 const { v4: uuidv4 } = require("uuid");
-const { shuffle } = require("./helpers");
-const fetch = require("node-fetch");
+import  {shuffle} from "./helpers";
 
 const getTriviaQuestions = (numberOfQns) => {
   return fetch(`https://opentdb.com/api.php?amount=${numberOfQns}`)
