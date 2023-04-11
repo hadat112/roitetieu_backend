@@ -41,7 +41,7 @@ const upload = multer({ storage: storage }).fields([
 ]);
 
 router.get("/", verifyToken, playController.index);
-router.post("/", upload, playController.savePlay);
+router.post("/create", upload, playController.savePlay);
 // router.delete("/", verifyToken, playController.deletePlay);
 
 export default router;

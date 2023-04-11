@@ -1,6 +1,7 @@
 import Play from '../models/Play';
 import Post from '../models/Post';
 import Comment from '../models/Comment';
+import Question from '../models/Question';
 import { multiMongooseToObject } from '../util/mongoose';
 
 class SiteController {
@@ -29,6 +30,16 @@ class SiteController {
         const play = new Play(formData);
         var result = await play.save();
         res.send(result);
+    }
+
+    async createQuestion(req, res) {
+        const formData = req.body;
+        const question = new Question(formData);
+        var result = await question.save();
+        if (!result) {
+            res.send({ success: false, message: 'Có lỗi khi lưu câu hỏi' });
+        }
+        res.send({ data: question, success: true });
     }
 
     async getUserInfo(req, res) {

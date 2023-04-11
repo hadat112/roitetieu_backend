@@ -28,6 +28,7 @@ const server = http.createServer(app);
 const PORT = process.env.PUPPET_PORT || 4001;
 
 app.use(cors());
+app.use(bodyParser.json());
 route(app);
 
 // HTTP logger
@@ -35,7 +36,6 @@ app.use(morgan("combined"));
 
 connect();
 
-app.use(bodyParser.json());
 // method
 
 const io = socketio(server, {

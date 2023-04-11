@@ -3,20 +3,11 @@ import moment from 'moment';
 import fetch from "node-fetch";
 const { v4: uuidv4 } = require("uuid");
 import  {shuffle} from "./helpers";
+import Question from '../models/Question';
 
-const getTriviaQuestions = (numberOfQns) => {
-  return fetch(`https://opentdb.com/api.php?amount=${numberOfQns}`)
-    .then((res) => res.json())
-    .then((json) => {
-      if (json.response_code !== 0) {
-        throw new Error(`Error Code ${json.response_code}`);
-      } else {
-        return json.results;
-      }
-    })
-    .catch((err) => {
-      throw new Error(err.message || "Get trivia questions failed");
-    });
+const getTriviaQuestions = async (numberOfQns) => {
+  const questions = await Question.find();
+  return questions;
 };
 
 const createGame = async (id) => {

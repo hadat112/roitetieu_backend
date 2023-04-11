@@ -61,6 +61,17 @@ class IntroduceController {
     res.send({ data: comment, success: true });
   }
 
+  async updatePost(req, res) {
+    const result = await Post.findByIdAndUpdate(req.body.id, {count: 0, type: req.body.type, title: req.body.title, content: req.body.content, slug: req.body.slug})
+      .then(() => {
+        res.status(200).send({ success: true });
+      })
+      .catch(() => {
+        res.send({ success: false, message: 'Khong the luu' });
+        next();
+      });
+  }
+
   async deletePost(req, res) {
     const result = await Post.findByIdAndDelete(req.query.id)
       .then(() => {
