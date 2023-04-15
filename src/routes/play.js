@@ -4,6 +4,8 @@ import verifyToken from "../middleware/auth";
 const router = Router();
 const multer = require("multer");
 const fs = require("fs");
+import verifyRole from '../middleware/verifyRole';
+import ROLE_LIST from '../config/roleList';
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -40,8 +42,8 @@ const upload = multer({ storage: storage }).fields([
   },
 ]);
 
-router.get("/", verifyToken, playController.index);
-router.post("/create", upload, playController.savePlay);
+router.get("/", playController.index);
+router.post("/create", verifyToken, verifyRole(ROLE_LIST.admin), upload, playController.savePlay);
 // router.delete("/", verifyToken, playController.deletePlay);
 
 export default router;

@@ -15,7 +15,7 @@ class PlayController {
     }
 
     async savePlay(req, res, next) {
-        const path = "http://localhost:4002/image?fileName=" + req.files.image[0].originalname
+        const path = "http://localhost:4001/image?fileName=" + req.files.image[0].originalname
         const play = new Play({
             name: req.body.name,
             content: req.body.content,
