@@ -1,12 +1,13 @@
 const games = {};
 import moment from 'moment';
-import fetch from "node-fetch";
 const { v4: uuidv4 } = require("uuid");
-import  {shuffle} from "./helpers";
+import { shuffle } from "./helpers";
 import Question from '../models/Question';
 
 const getTriviaQuestions = async (numberOfQns) => {
-  const questions = await Question.find();
+  const count = await Question.count()
+  var random = Math.floor(Math.random() * count)
+  const questions = await Question.find().limit(5).skip(random);
   return questions;
 };
 
@@ -35,7 +36,7 @@ const createGame = async (id) => {
     // Parse data
   } catch (err) {
     console.log(err);
-    throw new Error(err.message || "Get trivia questions failed");
+    throw new Error(err.message || "Có lỗi khi lấy câu hỏi");
   }
 
   games[id] = {
@@ -220,7 +221,7 @@ const getGameByID = (id) => {
   return { error: "Game not found" };
 };
 
-const removeEndedGame = () => {};
+const removeEndedGame = () => { };
 
 module.exports = {
   createGame,

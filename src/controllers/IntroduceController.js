@@ -8,9 +8,14 @@ class IntroduceController {
   async index(req, res, next) {
     if (req.query.type == 'post') {
       Post.find({})
-        .then((posts) => {
+        .then(async (posts) => {
           posts = multiMongooseToObject(posts);
-          res.send({ "data": posts, "success": true, "status": 200 });
+          const newPosts = await Promise.all(posts.map(async (post) => {
+            const numberComment = await Comment.countDocuments({ post_id: post._id });
+
+            return { ...post, number_comment: numberComment };
+          }))
+          res.send({ "data": newPosts, "success": true, "status": 200 });
         })
         .catch(next)
     } else if (req.query.type == 'recent') {
@@ -30,8 +35,9 @@ class IntroduceController {
         .then((posts) => {
           posts = multiMongooseToObject(posts);
           let curentIndex;
-          posts.map((post, index) => { 
-            if (post._id.toString() === req.query.id) curentIndex=  index })
+          posts.map((post, index) => {
+            if (post._id.toString() === req.query.id) curentIndex = index
+          })
           const recommendations = getTopRecommendations(curentIndex, posts, 5);
           console.log(recommendations);
           // res.send({ "data": recommendations, "success": true, "status": 200 });
@@ -62,7 +68,7 @@ class IntroduceController {
   }
 
   async updatePost(req, res) {
-    const result = await Post.findByIdAndUpdate(req.body.id, {count: 0, type: req.body.type, title: req.body.title, content: req.body.content, slug: req.body.slug})
+    const result = await Post.findByIdAndUpdate(req.body.id, { count: 0, type: req.body.type, title: req.body.title, content: req.body.content, slug: req.body.slug })
       .then(() => {
         res.status(200).send({ success: true });
       })
@@ -98,6 +104,17 @@ class IntroduceController {
         data: posts
       });
     }
+  }
+
+  async deleteComment(req, res) {
+    const result = await Comment.findByIdAndDelete(req.query.id)
+      .then(() => {
+        console.log('run');
+        res.status(200).send({ success: true });
+      })
+      .catch(() => {
+        res.send({ success: false, message: 'Khong the luu' });
+      });
   }
 }
 

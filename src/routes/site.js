@@ -13,5 +13,9 @@ router.post("/question/create", verifyToken, verifyRole(ROLE_LIST.admin), siteCo
 router.delete("/question/delete", verifyToken, verifyRole(ROLE_LIST.admin), siteController.deleteQuestion)
 router.post("/question/update", verifyToken, verifyRole(ROLE_LIST.admin), siteController.updateQuestion)
 router.get('/user-info', verifyToken, siteController.getUserInfo);
-
+router.get('/history', siteController.getHistory)
+router.get('/valuation', siteController.getValuation)
+router.get("/users", verifyToken, verifyRole(ROLE_LIST.admin), siteController.getUsers);
+router.delete("/user/delete", verifyToken, verifyRole(ROLE_LIST.admin), siteController.deleteUser)
+router.post("/user/update", verifyToken, verifyRole(ROLE_LIST.admin), siteController.updateUser)
 export default router;

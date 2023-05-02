@@ -37,6 +37,7 @@
   },
   "homepage": "https://github.com/hadat112/roinuoc_backend#readme",
   "dependencies": {
+    "@google-cloud/local-auth": "^2.1.0",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.13.3",
     "compression": "^1.5.2",
@@ -45,6 +46,7 @@
     "dotenv": "^16.0.3",
     "express": "^4.13.3",
     "express-handlebars": "^6.0.6",
+    "googleapis": "^105.0.0",
     "http": "^0.0.1-security",
     "http-errors": "^2.0.0",
     "jsonwebtoken": "^9.0.0",

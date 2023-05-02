@@ -43,7 +43,6 @@ const io = socketio(server, {
   origins: ["http://localhost:5173"],
 });
 
-
 // Socker Emitters
 const updateLeaderboard = (data, room) => {
   io.to(room).emit("updateLeaderboard", {

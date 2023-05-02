@@ -11,5 +11,6 @@ router.post('/posts/create', verifyToken, verifyRole(ROLE_LIST.admin), introduce
 router.delete("/posts/delete", verifyToken, verifyRole(ROLE_LIST.admin), introduceController.deletePost);
 router.post("/posts/update", verifyToken, verifyRole(ROLE_LIST.admin), introduceController.updatePost);
 router.post('/comment', verifyToken, introduceController.saveComment);
+router.delete('/comment/delete', verifyToken, introduceController.deleteComment);
 
 export default router;

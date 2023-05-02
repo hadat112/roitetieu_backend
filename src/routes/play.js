@@ -10,7 +10,7 @@ import ROLE_LIST from '../config/roleList';
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const dir = "src/uploads/images";
-
+    console.log(file);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage }).fields([
+const upload = multer().fields([
   {
     name: "image",
     maxCount: 1,
@@ -43,7 +43,9 @@ const upload = multer({ storage: storage }).fields([
 ]);
 
 router.get("/", playController.index);
-router.post("/create", verifyToken, verifyRole(ROLE_LIST.admin), upload, playController.savePlay);
-// router.delete("/", verifyToken, playController.deletePlay);
+router.post("/create", verifyToken, verifyRole(ROLE_LIST.admin), upload, playController.savePlay); 
+router.post("/update", verifyToken, verifyRole(ROLE_LIST.admin), upload, playController.updatePlay);
+router.delete("/delete", verifyToken, verifyRole(ROLE_LIST.admin), playController.deletePlay);
+router.get("/detail", playController.detailPlay);
 
 export default router;
